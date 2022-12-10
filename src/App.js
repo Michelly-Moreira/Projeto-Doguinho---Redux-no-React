@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchDogImage } from './redux/actions';
+import './style.css';
 
-function App() {
+class App extends Component{
+  render(){
+    const {
+      isFetching,
+      imageURL,
+      dispatch
+    } = this.props;
+
+    if (isFetching) return <p>Carregando...</p>
+  console.log(this.props);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   <div>
+    <button
+    onClick={() => {dispatch(fetchDogImage());
+    }}
+    type='button'
+    >
+      Novo Doguinho
+    </button>
+    {
+      imageURL &&(
+      <img
+      src={ imageURL }
+      alt='Imagem de um cachorro aleatório'
+      />
+      )}
+   </div>
+);
+}
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  imageURL: state.imageURL, 
+  isFetching: state.isFetching,
+})
+//neste caso não posso usar spread operator dentro do mapStateToProps porque não usei o combine reducer no reducer, senão ele me trará string por string ao invés do resultado esperado.
+export default connect(mapStateToProps)(App);
